@@ -9,32 +9,32 @@ const capitalizeName = (name) =>
   name ? name.charAt(0).toUpperCase() + name.slice(1).toLowerCase() : "";
 
 const QUESTIONS = [
-  { letra: "A", respuesta: "algoritmo", pista: "Conjunto de pasos para resolver un problema." },
-  { letra: "B", respuesta: "bug", pista: "Error en un programa." },
-  { letra: "C", respuesta: "codigo", pista: "Instrucciones para que la computadora entienda." },
-  { letra: "D", respuesta: "dato", pista: "Información que usamos en la computadora." },
-  { letra: "E", respuesta: "error", pista: "Lo que aparece cuando algo está mal en el programa." },
-  { letra: "F", respuesta: "funcion", pista: "Bloque de código que realiza una tarea." },
-  { letra: "G", respuesta: "gigabyte", pista: "Unidad para medir memoria, más grande que MB." },
-  { letra: "H", respuesta: "hardware", pista: "Partes físicas de la computadora." },
-  { letra: "I", respuesta: "internet", pista: "Red gigante que conecta computadoras." },
-  { letra: "J", respuesta: "javascript", pista: "Lenguaje muy usado en páginas web." },
-  { letra: "K", respuesta: "kilobyte", pista: "Unidad pequeña de memoria." },
-  { letra: "L", respuesta: "lenguaje", pista: "Forma especial de escribir instrucciones." },
-  { letra: "M", respuesta: "monitor", pista: "Pantalla de la computadora." },
-  { letra: "N", respuesta: "nube", pista: "Lugar en internet donde guardamos archivos." },
-  { letra: "O", respuesta: "ordenador", pista: "Otra forma de decir computadora." },
-  { letra: "P", respuesta: "programa", pista: "Conjunto de instrucciones de la computadora." },
-  { letra: "Q", respuesta: "query", pista: "Palabra usada en bases de datos para pedir info." },
-  { letra: "R", respuesta: "robot", pista: "Máquina que puede seguir instrucciones." },
-  { letra: "S", respuesta: "software", pista: "Programas que hacen funcionar la computadora." },
-  { letra: "T", respuesta: "teclado", pista: "Dispositivo para escribir en la computadora." },
-  { letra: "U", respuesta: "usuario", pista: "Persona que usa un programa." },
-  { letra: "V", respuesta: "variable", pista: "Caja imaginaria para guardar un valor." },
-  { letra: "W", respuesta: "web", pista: "Conjunto de páginas en internet." },
-  { letra: "X", respuesta: "xml", pista: "Lenguaje para organizar/guardar datos." },
-  { letra: "Y", respuesta: "youtube", pista: "Plataforma de videos en internet." },
-  { letra: "Z", respuesta: "zip", pista: "Archivo comprimido." }
+  {letra: "A", respuesta: "algoritmo", pista: "Conjunto de pasos para resolver un problema."},
+  {letra: "B", respuesta: "bug", pista: "Error en un programa."},
+  {letra: "C", respuesta: "codigo", pista: "Instrucciones para que la computadora entienda."},
+  {letra: "D", respuesta: "dato", pista: "Información que usamos en la computadora."},
+  {letra: "E", respuesta: "error", pista: "Lo que aparece cuando algo está mal en el programa."},
+  {letra: "F", respuesta: "funcion", pista: "Bloque de código que realiza una tarea."},
+  {letra: "G", respuesta: "gigabyte", pista: "Unidad para medir memoria, más grande que MB."},
+  {letra: "H", respuesta: "hardware", pista: "Partes físicas de la computadora."},
+  {letra: "I", respuesta: "internet", pista: "Red gigante que conecta computadoras."},
+  {letra: "J", respuesta: "javascript", pista: "Lenguaje muy usado en páginas web."},
+  {letra: "K", respuesta: "kilobyte", pista: "Unidad pequeña de memoria."},
+  {letra: "L", respuesta: "lenguaje", pista: "Forma especial de escribir instrucciones."},
+  {letra: "M", respuesta: "monitor", pista: "Pantalla de la computadora."},
+  {letra: "N", respuesta: "nube", pista: "Lugar en internet donde guardamos archivos."},
+  {letra: "O", respuesta: "ordenador", pista: "Otra forma de decir computadora."},
+  {letra: "P", respuesta: "programa", pista: "Conjunto de instrucciones de la computadora."},
+  {letra: "Q", respuesta: "query", pista: "Palabra usada en bases de datos para pedir info."},
+  {letra: "R", respuesta: "robot", pista: "Máquina que puede seguir instrucciones."},
+  {letra: "S", respuesta: "software", pista: "Programas que hacen funcionar la computadora."},
+  {letra: "T", respuesta: "teclado", pista: "Dispositivo para escribir en la computadora."},
+  {letra: "U", respuesta: "usuario", pista: "Persona que usa un programa."},
+  {letra: "V", respuesta: "variable", pista: "Caja imaginaria para guardar un valor."},
+  {letra: "W", respuesta: "web", pista: "Conjunto de páginas en internet."},
+  {letra: "X", respuesta: "xml", pista: "Lenguaje para organizar/guardar datos."},
+  {letra: "Y", respuesta: "youtube", pista: "Plataforma de videos en internet."},
+  {letra: "Z", respuesta: "zip", pista: "Archivo comprimido."}
 ].map(q => ({ ...q, estado: 0, passedRound: -1 }));
 
 let idx = 0;
@@ -74,7 +74,7 @@ function renderRanking() {
     if (i === 0) li.classList.add("gold");
     else if (i === 1) li.classList.add("silver");
     else if (i === 2) li.classList.add("bronze");
-    const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+    const medal = i === 0 ? "🥇 - Senior" : i === 1 ? "🥈 - Middle" : i === 2 ? "🥉 - Junior" : "Trainee";
     li.innerHTML = `
       <span class="rank-name">${medal} ${r.name}</span>
       <span class="rank-score">${r.score} pts</span>`;
