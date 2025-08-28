@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pasapalabra - Computación</title>
+  <link rel="stylesheet" href="Style.css" />
+</head>
+<body>
+  <!-- PANTALLA INICIO -->
+  <section id="start-screen" class="screen active">
+    <h1>Pasapalabra — Computación</h1>
+
+    <div class="ranking-box">
+      <h2>🏆 Ranking (Top 5)</h2>
+      <ul id="ranking-list"></ul>
+    </div>
+
+    <div class="start-controls">
+      <input id="player-name" type="text" placeholder="Ingresa tu nombre" autocomplete="off"/>
+      <button id="play-btn">Jugar</button>
+      <p class="hint-keys">Controles: <strong>ENTER</strong> = responder · <strong>TAB</strong> = pasapalabra</p>
+    </div>
+  </section>
+
+  <!-- PANTALLA JUEGO -->
+  <section id="game-screen" class="screen">
+    <div class="topbar">
+      <div id="player-label"></div>
+      <div id="timer">⏱ 120</div>
+      <div id="score">Puntaje: 0</div>
+    </div>
+
+    <div id="rosco">
+      <div id="center">
+        <div id="clue">Preparado…</div>
+      </div>
+    </div>
+
+    <input id="answer" type="text" placeholder="Escribe tu respuesta y presiona ENTER" autocomplete="off"/>
+
+    <div id="end-actions" class="hidden">
+      <button id="back-to-start">Volver al inicio</button>
+    </div>
+  </section>
+
+  <script src="Preguntas.js"></script>
+</body>
+</html>
