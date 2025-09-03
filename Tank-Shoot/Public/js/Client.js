@@ -1,6 +1,7 @@
 // Variables globales
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const socket = io();
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 const connectionStatus = document.getElementById('connectionStatus');
 const livesCount = document.getElementById('livesCount');
 const scoreCount = document.getElementById('scoreCount');
@@ -8,7 +9,6 @@ const gameOverDiv = document.getElementById('gameOver');
 const finalScore = document.getElementById('finalScore');
 const respawnButton = document.getElementById('respawnButton');
 
-let socket;
 let players = {};
 let bullets = [];
 let currentPlayerId;
@@ -17,13 +17,13 @@ const speed = 4;
 
 // Cargar recursos
 const tankImage = new Image();
-tankImage.src = 'Tank.png';
+tankImage.src = './Asset/Tank.png';
 
 const bulletImage = new Image();
-bulletImage.src = 'bullet.png';
+bulletImage.src = './Asset/Bullet.png';
 
-const shootSound = new Audio('shoot.wav');
-const explosionSound = new Audio('explosion.wav');
+const shootSound = new Audio('./Asset/Shoot.wav');
+const explosionSound = new Audio('./Asset/Explosion.wav');
 
 // Inicializar el juego cuando se carguen los recursos
 window.addEventListener('load', initGame);
