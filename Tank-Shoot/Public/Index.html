@@ -7,12 +7,41 @@
     <title>Tank Battle</title>
     <link rel="stylesheet" href="Styles.css">
 </head>
-
 <body>
+    <h1>Tank Shoot</h1>
+    
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div class="connection-status" id="connectionStatus">Conectando...</div>
+        
+        <div class="game-over" id="gameOver">
+            <h2>Game Over</h2>
+            <p>Has perdido todas tus vidas</p>
+            <p>Puntuación final: <span id="finalScore">0</span></p>
+            <button id="respawnButton">Volver a Jugar</button>
+        </div>
+    </div>
+    
+    <div class="hud">
+        <div class="player-stats">
+            <div class="stat lives">
+                <span>Vidas:</span>
+                <span id="livesCount">3</span>
+            </div>
+            <div class="stat score">
+                <span>Puntuación:</span>
+                <span id="scoreCount">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <p>Controles: Flechas para moverse, Espacio para disparar</p>
+    </div>
 
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script src="/socket.io/socket.io.js"></script>
     <script src="Client.js"></script>
-    
 </body>
 </html>

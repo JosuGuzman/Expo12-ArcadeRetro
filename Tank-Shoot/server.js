@@ -12,28 +12,48 @@ app.use(express.static("public"));
 let players = {};
 let bullets = [];
 
+// Función para generar colores aleatorios
+function getRandomColor() {
+  return `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
+}
+
+// Función para crear una bala en la dirección correcta
+function createBullet(player, ownerId) {
+  const speed = 8;
+  const vx = Math.cos(player.dir) * speed;
+  const vy = Math.sin(player.dir) * speed;
+  
+  return {
+    x: player.x,
+    y: player.y,
+    vx: vx,
+    vy: vy,
+    owner: ownerId
+  };
+}
+
+// Bucle de juego para actualizar balas y verificar colisiones
 setInterval(() => {
-    // mover balas
-    bullets.forEach((b) => {
-        b.x += b.vx;
-        b.y += b.vy;
-    });
-    
-    // eliminar balas fuera de la pantalla
-    bullets = bullets.filter((b) => b.x >= 0 && b.x <= 800 && b.y >= 0 && b.y <= 600);
-    
-    // chequear colisiones con jugadores
-    for (let i = bullets.length - 1; i >= 0; i--) {
-        const b = bullets[i];
-        for (let id in players) {
-            const p = players[id];
-            if (
-                b.owner !== id &&
-                b.x < p.x + 40 &&
-                b.x + 8 > p.x &&
-                b.y < p.y + 40 &&
-                b.y + 8 > p.y
-    ) {
+  // mover balas
+  bullets.forEach((b) => {
+    b.x += b.vx;
+    b.y += b.vy;
+  });
+  
+  // eliminar balas fuera de la pantalla
+  bullets = bullets.filter((b) => b.x >= 0 && b.x <= 800 && b.y >= 0 && b.y <= 600);
+  
+  // chequear colisiones con jugadores
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    for (let id in players) {
+      const p = players[id];
+      // Detectar colisión (simplificado para forma circular)
+      const dx = b.x - p.x;
+      const dy = b.y - p.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (b.owner !== id && distance < 30) { // 30 es el radio aproximado del tanque + bala
         console.log(`Jugador ${id} fue golpeado por ${b.owner}`);
         bullets.splice(i, 1);
         
@@ -44,22 +64,26 @@ setInterval(() => {
         if (players[b.owner]) {
           players[b.owner].score += 1;
         }
+        
+        // Reproducir sonido de explosión
+        io.emit("playExplosionSound");
       
         // si pierde todas las vidas → respawn
         if (p.lives <= 0) {
           p.lives = 3;
-          p.x = Math.random() * 700;
-          p.y = Math.random() * 500;
+          p.x = Math.random() * 700 + 50;
+          p.y = Math.random() * 500 + 50;
+          p.score = 0; // Reiniciar puntuación al respawnear
         }
       
         io.emit("updatePlayers", players);
         break;
-        }
+      }
     }
   }
 
   io.emit("bulletsUpdate", bullets);
-}, 1000 / 30);
+}, 1000 / 30); // 30 FPS
 
 // Evento de conexión de jugadores
 io.on("connection", (socket) => {
@@ -67,10 +91,10 @@ io.on("connection", (socket) => {
 
   // nuevo jugador
   players[socket.id] = { 
-    x: 100, 
-    y: 100, 
+    x: Math.random() * 700 + 50, 
+    y: Math.random() * 500 + 50, 
     color: getRandomColor(), 
-    dir: "down", 
+    dir: 0, // dirección en radianes
     lives: 3, 
     score: 0 
   };
@@ -78,15 +102,23 @@ io.on("connection", (socket) => {
   // enviar jugadores actuales
   socket.emit("currentPlayers", players);
   // notificar a los demás
-  socket.broadcast.emit("newPlayer", { id: socket.id, ...players[socket.id] });
-  io.emit("updatePlayers", players);
+  socket.broadcast.emit("newPlayer", { 
+    id: socket.id, 
+    ...players[socket.id] 
+  });
 
+  // movimiento
   socket.on("move", (data) => {
     if (players[socket.id]) {
       players[socket.id].x = data.x;
       players[socket.id].y = data.y;
-      players[socket.id].dir = data.dir; // dirección del tanque
-      io.emit("playerMoved", { id: socket.id, ...players[socket.id] });
+      players[socket.id].dir = data.dir; // dirección en radianes
+      socket.broadcast.emit("playerMoved", { 
+        id: socket.id, 
+        x: data.x, 
+        y: data.y, 
+        dir: data.dir 
+      });
     }
   });
 
@@ -95,35 +127,21 @@ io.on("connection", (socket) => {
     if (!players[socket.id]) return;
 
     const p = players[socket.id];
-    let vx = 0, vy = 0;
-
-    if (p.dir === "up") vy = -8;
-    if (p.dir === "down") vy = 8;
-    if (p.dir === "left") vx = -8;
-    if (p.dir === "right") vx = 8;
-
-    bullets.push({ x: p.x + 16, y: p.y + 16, vx, vy, owner: socket.id });
+    const newBullet = createBullet(p, socket.id);
+    bullets.push(newBullet);
+    
+    // Reproducir sonido de disparo para todos
+    io.emit("playShootSound");
   });
-});
 
-io.on("connection", (socket) => {
-  console.log("Jugador conectado:", socket.id);
-
-  // asigna posición inicial
-  players[socket.id] = { x: 100, y: 100, color: getRandomColor() };
-
-  // envía todos los jugadores al recién conectado
-  socket.emit("currentPlayers", players);
-
-  // notifica a los demás
-  socket.broadcast.emit("newPlayer", { id: socket.id, ...players[socket.id] });
-
-  // movimiento
-  socket.on("move", (data) => {
+  // solicitud de respawn
+  socket.on("respawn", () => {
     if (players[socket.id]) {
-      players[socket.id].x = data.x;
-      players[socket.id].y = data.y;
-      io.emit("playerMoved", { id: socket.id, ...players[socket.id] });
+      players[socket.id].lives = 3;
+      players[socket.id].x = Math.random() * 700 + 50;
+      players[socket.id].y = Math.random() * 500 + 50;
+      players[socket.id].score = 0;
+      io.emit("updatePlayers", players);
     }
   });
 
@@ -134,10 +152,6 @@ io.on("connection", (socket) => {
     io.emit("playerDisconnected", socket.id);
   });
 });
-
-function getRandomColor() {
-  return `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
-}
 
 server.listen(3000, () => {
   console.log("Servidor corriendo en http://localhost:3000");
