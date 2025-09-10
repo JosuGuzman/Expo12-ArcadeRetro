@@ -1,12 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro del Arcade</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade Retro - Login</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Press Start 2P', monospace; background: #000; color: #0ff; }
+</style>
 </head>
-<body>
-    <h1>Welcome to Arcade Tecnica 12</h1>
-    <p>This is the main page of the Arcade Tecnica 12 project.</p>
+
+<body class="flex flex-col items-center justify-center h-screen">
+    <h1 class="text-2xl mb-6">Arcade Retro</h1>
+
+    <div id="loginDiv" class="flex flex-col items-center gap-4">
+    
+        <input id="playerName" type="text" placeholder="Ingresa tu nombre" class="p-2 border border-cyan-500 bg-black text-cyan-500 text-sm">
+    
+        <p>Secuencia para obtener coin: <strong>9 + 0</strong></p>
+    
+        <p id="coinCount" class="text-lg">Coins: 0</p>
+    
+        <button id="enterLobby" class="mt-4 px-4 py-2 border border-cyan-500 hover:bg-cyan-500 hover:text-black">Ir al Lobby</button>
+  
+    </div>
+
+    <script>
+        let coins = 0;
+        let keysPressed = {};
+        const playerNameInput = document.getElementById('playerName');
+        const coinCountEl = document.getElementById('coinCount');
+        const enterLobbyBtn = document.getElementById('enterLobby');
+
+        document.addEventListener('keydown', (e) => {
+          keysPressed[e.key] = true;
+
+          // Combinación 9 + 0 (normal, numpad o mixta)
+          if ((keysPressed['9'] || keysPressed['Numpad9']) &&
+              (keysPressed['0'] || keysPressed['Numpad0'])) {
+            coins++;
+            coinCountEl.textContent = `Coins: ${coins}`;
+            keysPressed = {}; // reset para que no acumule múltiples coins
+          }
+        });
+
+        document.addEventListener('keyup', (e) => {
+          keysPressed[e.key] = false;
+        });
+
+        enterLobbyBtn.addEventListener('click', () => {
+          const playerName = playerNameInput.value.trim();
+          if (playerName === '') {
+            alert('Debes ingresar un nombre.');
+            return;
+          }
+          if (coins < 1) {
+            alert('Necesitas al menos 1 coin para entrar al lobby.');
+            return;
+          }
+
+          // Guardar nombre y coins (podés usar sessionStorage)
+          sessionStorage.setItem('playerName', playerName);
+          sessionStorage.setItem('coins', coins);
+
+          // Redirigir al lobby
+          window.location.href = 'lobby.html';
+        });
+    </script>
 </body>
 </html>
