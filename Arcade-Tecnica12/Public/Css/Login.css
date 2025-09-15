@@ -1,0 +1,83 @@
+/* ===============================
+   login.css - Estilos específicos del login
+   =============================== */
+
+/* Fondo con video o degradado arcade */
+body.login {
+  background: radial-gradient(circle at 20% 10%, rgba(100,40,120,0.6), rgba(30,12,40,0.95));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px;
+}
+
+/* Caja de login */
+.login-box {
+  margin: 30px auto;
+  width: 520px;
+  max-width: 95%;
+  border: 2px solid rgba(20,220,255,0.2);
+  padding: 22px;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6),
+              inset 0 0 18px rgba(16,200,255,0.02);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(10,10,10,0.06));
+}
+
+/* Etiquetas */
+label.label-yellow {
+  color: var(--neon-yellow);
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+/* Input */
+input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  outline: none;
+  box-shadow: inset 0 -2px 12px rgba(255,255,255,0.01);
+}
+
+/* Botón */
+.btn-arcade {
+  margin-top: 18px;
+  background: transparent;
+  border: 3px solid rgba(16,200,255,0.26);
+  padding: 12px 18px;
+  border-radius: 6px;
+  color: var(--neon-cyan);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.btn-arcade:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0,200,255,0.08);
+}
+
+/* Info box */
+.box-info {
+  margin-top: 14px;
+  border: 2px solid rgba(255,200,80,0.08);
+  padding: 12px;
+  border-radius: 6px;
+  color: #ffd;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,180,0,0.01));
+  font-size: 14px;
+}
+
+/* Nota */
+.small-note {
+  margin-top: 8px;
+  color: rgba(255,255,255,0.2);
+  font-size: 13px;
+}
