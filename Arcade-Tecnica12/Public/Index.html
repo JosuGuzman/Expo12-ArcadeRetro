@@ -1,73 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcade Retro - Login</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
-    body { font-family: 'Press Start 2P', monospace; background: #000; color: #0ff; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Arcade Técnica12 - Login</title>
+  <link rel="stylesheet" href="./Css/Style.css" />
 </head>
+<body class="bg-arcade">
 
-<body class="flex flex-col items-center justify-center h-screen">
-    <h1 class="text-2xl mb-6">Arcade Retro</h1>
-
-    <div id="loginDiv" class="flex flex-col items-center gap-4">
-    
-        <input id="playerName" type="text" placeholder="Ingresa tu nombre" class="p-2 border border-cyan-500 bg-black text-cyan-500 text-sm">
-    
-        <p>Secuencia para obtener coin: <strong>9 + 0</strong></p>
-    
-        <p id="coinCount" class="text-lg">Coins: 0</p>
-    
-        <button id="enterLobby" class="mt-4 px-4 py-2 border border-cyan-500 hover:bg-cyan-500 hover:text-black">Ir al Lobby</button>
+  <div class="video-background">
+    <video autoplay muted loop id="bg-video">
+      <source src="tu-video.mp4" type="video/mp4">
+    </video>
+  </div>
   
-    </div>
+  <div class="center-wrap">
+    <header class="title-neon">
+      <h1>ARCADE<br/></h1>
+        <img src="https://et12.edu.ar/imgs/et12.gif" alt="Escudo ET12" class="logo"> 
+        <h1>COMPUTACIÓN</h1>
+      </header>
 
-    <script>
-        let coins = 0;
-        let keysPressed = {};
-        const playerNameInput = document.getElementById('playerName');
-        const coinCountEl = document.getElementById('coinCount');
-        const enterLobbyBtn = document.getElementById('enterLobby');
+    <main class="login-box">
+      <form id="loginForm">
+        <label class="label-yellow">NOMBRE DE JUGADOR:</label>
+        <input id="playerName" type="text" placeholder="Ingresa tu nombre..." required/>
+        <button id="enterArcade" class="btn-arcade" type="submit">INGRESAR AL ARCADE</button>
+        <div class="box-info">
+          <p>💰 Para jugar necesitas COINS</p>
+          <p>Presiona <strong>9 + 0</strong> (pueden ser normales, Num, o mezcla) para obtener 1 coin</p>
+          <p>Cada partida consume 1 coin.</p>
+        </div>
+      </form>
+    </main>
 
-        document.addEventListener('keydown', (e) => {
-          keysPressed[e.key] = true;
+    <footer class="small-note">Presiona la combinación cuando estés en esta pantalla para obtener coins.</footer>
+  </div>
 
-          // Combinación 9 + 0 (normal, numpad o mixta)
-          if ((keysPressed['9'] || keysPressed['Numpad9']) &&
-              (keysPressed['0'] || keysPressed['Numpad0'])) {
-            coins++;
-            coinCountEl.textContent = `Coins: ${coins}`;
-            keysPressed = {}; // reset para que no acumule múltiples coins
-          }
-        });
-
-        document.addEventListener('keyup', (e) => {
-          keysPressed[e.key] = false;
-        });
-
-        enterLobbyBtn.addEventListener('click', () => {
-          const playerName = playerNameInput.value.trim();
-          if (playerName === '') {
-            alert('Debes ingresar un nombre.');
-            return;
-          }
-          if (coins < 1) {
-            alert('Necesitas al menos 1 coin para entrar al lobby.');
-            return;
-          }
-
-          // Guardar nombre y coins (podés usar sessionStorage)
-          sessionStorage.setItem('playerName', playerName);
-          sessionStorage.setItem('coins', coins);
-
-          // Redirigir al lobby
-          window.location.href = 'lobby.html';
-        });
-    </script>
+  <script src="js/login.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

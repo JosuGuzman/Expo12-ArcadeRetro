@@ -1,18 +1,20 @@
 {
   "name": "arcade-tecnica12",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Arcade Técnica12",
+  "main": "Server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/server.js"
+    "start": "node Server/server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
     "socket.io": "^4.8.1"
-  }
-
+  },
+  "devDependencies": {},
+  "engines": { "node": ">=16" },
+  "author": "Josu Guzman",
+  "license": "ISC",
+  "keywords": []
 }
+
