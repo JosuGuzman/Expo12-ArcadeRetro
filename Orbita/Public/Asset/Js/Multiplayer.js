@@ -2,11 +2,91 @@
 // Cargado después de script.js en game.html
 // conecta al servidor Socket.io servido en /socket.io/socket.io.js
 
-const socket = io(); // requiere que <script src="/socket.io/socket.io.js"></script> esté cargado
+// multiplayer.js
+const socket = io();
+const playerName =
+  localStorage.getItem("orbitaPlayerName") ||
+  prompt("Nombre:", `Player_${Math.floor(Math.random() * 1000)}`);
+localStorage.setItem("orbitaPlayerName", playerName);
 
-// Pide un nombre simple (puedes cambiar por UI)
-const playerName = localStorage.getItem('orbitaPlayerName') || prompt("Nombre de jugador (multijugador):", `Player_${Math.floor(Math.random()*1000)}`) || `Player_${Math.floor(Math.random()*1000)}`;
-localStorage.setItem('orbitaPlayerName', playerName);
+// Score local
+let localScore = 0;
+
+// Contenedor de palabras
+const wordsContainer = document.getElementById("words-container") || (() => {
+  const div = document.createElement("div");
+  div.id = "words-container";
+  document.body.appendChild(div);
+  return div;
+})();
+
+// Manejo de palabras activas
+const activeWords = [];
+
+// Start
+socket.on("connect", () => {
+  socket.emit("newPlayer", { name: playerName });
+});
+
+// Nueva palabra
+socket.on("newWord", ({ word, x, speed }) => {
+  const span = document.createElement("span");
+  span.className = "falling-word";
+  span.innerText = word;
+  span.style.left = `${x}%`;
+  span.dataset.speed = speed;
+  span.dataset.progress = "0";
+  wordsContainer.appendChild(span);
+  activeWords.push(span);
+});
+
+// Animar palabras
+function animateWords() {
+  activeWords.forEach((el) => {
+    let p = parseFloat(el.dataset.progress) || 0;
+    p += parseFloat(el.dataset.speed) * 0.5;
+    el.dataset.progress = p;
+    el.style.top = p + "px";
+
+    if (p > window.innerHeight - 100) {
+      // palabra tocó el piso
+      el.remove();
+      socket.emit("playerLost");
+    }
+  });
+  requestAnimationFrame(animateWords);
+}
+requestAnimationFrame(animateWords);
+
+// Input listener
+let currentInput = "";
+window.addEventListener("keydown", (e) => {
+  if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
+    currentInput += e.key;
+  } else if (e.key === "Backspace") {
+    currentInput = currentInput.slice(0, -1);
+  } else if (e.key === "Enter") {
+    checkWord();
+    currentInput = "";
+  }
+});
+
+function checkWord() {
+  const found = activeWords.find((el) => el.innerText === currentInput);
+  if (found) {
+    found.remove();
+    activeWords.splice(activeWords.indexOf(found), 1);
+    socket.emit("wordCompleted");
+  }
+}
+
+// Score updates
+socket.on("scoreUpdate", ({ id, score, name }) => {
+  if (id === socket.id) {
+    localScore = score;
+    document.getElementById("score").innerText = `Score: ${score}`;
+  }
+});
 
 // DOM helpers
 const otherPlayersContainerId = 'other-players-container';
@@ -165,3 +245,4 @@ setInterval(() => {
   const score = readLocalScore();
   socket.emit('scoreUpdate', { score });
 }, 250);
+

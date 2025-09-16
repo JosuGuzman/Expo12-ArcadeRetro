@@ -31,6 +31,15 @@ main {
   flex-direction: column;
 }
 
+.falling-word {
+  position: absolute;
+  top: 0px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 5px #000;
+}
+
 .score {
   display: flex;
   width: 100%;
