@@ -64,6 +64,7 @@ window.addEventListener("keydown", (e) => {
   if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
     currentInput += e.key;
   } else if (e.key === "Backspace") {
+    e.preventDefault(); // evita que el navegador retroceda
     currentInput = currentInput.slice(0, -1);
   } else if (e.key === "Enter") {
     checkWord();
